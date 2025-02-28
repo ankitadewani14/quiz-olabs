@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Sign Language Quiz</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          padding: 20px;
+          background-color: #121212; /* Dark background */
+          color: #ffffff; /* Light text for contrast */
+      }
+      .quiz-container {
+          max-width: 800px; /* Increased width */
+          height: 600px; /* Added height */
+          margin: auto;
+          background: #1e1e1e; /* Darker background for the container */
+          border: 4px solid #4CAF50;
+          border-radius: 15px;
+          padding: 30px;
+          box-shadow: 0 6px 10px rgba(0, 0, 0, 0.8); /* Enhanced shadow for dark mode */
+      }
+      .question {
+          font-size: 1.8em;
+          margin: 20px 0;
+          font-weight: bold;
+          color: #4CAF50; /* Green text for questions */
+      }
+      .options {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+      }
+      .options img {
+          width: 100%;
+          height: 250px; /* Increased image height */
+          object-fit: cover;
+          border: 4px solid #333; /* Subtle border for dark mode */
+          border-radius: 10px;
+          cursor: pointer;
+          transition: 0.3s;
+      }
+      .options img:hover {
+          border-color: #4CAF50; /* Highlight border on hover */
+      }
+      #score {
+          font-size: 1.5em;
+          margin-top: 20px;
+          color: #4CAF50; /* Highlight color for score */
+      }
+      button {
+          padding: 12px 25px;
+          font-size: 1.2em;
+          cursor: pointer;
+          border: none;
+          background-color: #4CAF50;
+          color: #ffffff;
+          border-radius: 8px;
+          transition: 0.3s;
+      }
+      button:hover {
+          background-color: #45a049;
+      }
+  </style>
+  
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="score" style="display: none;"></div>
+        <button id="restart" style="display: none;" onclick="startQuiz()">Restart Quiz</button>
+        <button id="next-level" style="display: none;" onclick="window.location.href='nextlevel.html'">Proceed to Next Level</button>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Select the image for the letter 'A':",
+                options: [
+                    { src: "a.jpg", correct: true },
+                    { src: "l.jpg", correct: false },
+                    { src: "i.jpg", correct: false },
+                    { src: "d.jpg", correct: false },
+                ]
+            },
+            {
+                question: "Select the image for the letter 'E':",
+                options: [
+                { src: "h.jpg", correct: false },
+                { src: "e.jpg", correct: true },
+                { src: "i.jpg", correct: false },
+                { src: "d.jpg", correct: false },
+                ]
+            },
+            {
+              question: "Select the image for the letter 'N':",
+              options: [
+              { src: "v.jpg", correct: false },
+              { src: "e.jpg", correct: false },
+              { src: "n.jpg", correct: true },
+              { src: "s.jpg", correct: false },
+              ]
+          },
+          {
+            question: "Select the image for the letter '5':",
+            options: [
+            { src: "0.jpg", correct: false },
+            { src: "1.jpg", correct: false },
+            { src: "3.jpg", correct: false },
+            { src: "5.jpg", correct: true },
+            ]
+        },
+        {
+          question: "Select the image for the letter '9':",
+          options: [
+          { src: "5.jpg", correct: false },
+          { src: "9.jpg", correct: true },
+          { src: "6.jpg", correct: false },
+          { src: "4.jpg", correct: false },
+          ]
+      },
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById("score").style.display = "none";
+            document.getElementById("restart").style.display = "none";
+            document.getElementById("next-level").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+            
+            const currentQuestion = questions[currentQuestionIndex];
+            questionElement.textContent = currentQuestion.question;
+
+            optionsElement.innerHTML = "";
+            currentQuestion.options.forEach((option, index) => {
+                const img = document.createElement("img");
+                img.src = option.src;
+                img.alt = `Option ${index + 1}`;
+                img.onclick = () => checkAnswer(option.correct);
+                optionsElement.appendChild(img);
+            });
+        }
+
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                score++;
+            }
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            document.getElementById("quiz").style.display = "none";
+            const scoreElement = document.getElementById("score");
+            scoreElement.textContent = `Your Score: ${score} / ${questions.length}`;
+            scoreElement.style.display = "block";
+            document.getElementById("restart").style.display = "inline-block";
+            
+            if (score >= 3) {
+                document.getElementById("next-level").style.display = "inline-block";
+            }
+        }
+
+        
+
+        // Start the quiz on page load
+        startQuiz();
+    </script>
+</body>
+</html>

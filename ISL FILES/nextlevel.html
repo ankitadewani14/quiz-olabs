@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Sign Language Quiz - Level 2</title>
+    <style>
+      body {
+          font-family: Arial, sans-serif;
+          background-color: #121212;
+          color: #e0e0e0;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 100vh;
+      }
+
+      h1 {
+          color: #bb86fc;
+      }
+
+      #videoPlayer {
+          width: 80%;
+          max-width: 640px;
+          margin: 20px 0;
+          border: 2px solid #bb86fc;
+          border-radius: 8px;
+      }
+
+      #options {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          width: 80%;
+          max-width: 400px;
+      }
+
+      button {
+          background-color: #1f1f1f;
+          color: #e0e0e0;
+          border: 2px solid #bb86fc;
+          border-radius: 8px;
+          padding: 10px;
+          cursor: pointer;
+          font-size: 16px;
+          transition: background-color 0.3s, transform 0.2s;
+      }
+
+      button:hover {
+          background-color: #bb86fc;
+          color: #121212;
+          transform: scale(1.05);
+      }
+
+      #score {
+          font-size: 20px;
+          color: #03dac6;
+          margin: 20px;
+          display: none;
+      }
+
+      #restart {
+          background-color: #1f1f1f;
+          color: #e0e0e0;
+          border: 2px solid #03dac6;
+          border-radius: 8px;
+          padding: 10px 20px;
+          font-size: 16px;
+          cursor: pointer;
+          transition: background-color 0.3s, transform 0.2s;
+          display: none;
+      }
+
+      #restart:hover {
+          background-color: #03dac6;
+          color: #121212;
+          transform: scale(1.05);
+      }
+
+      #quiz {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+      }
+
+      @media (max-width: 600px) {
+          button {
+              font-size: 14px;
+              padding: 8px;
+          }
+
+          #videoPlayer {
+              width: 100%;
+          }
+      }
+  </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <video id="videoPlayer" controls>
+            <source src="video1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div id="quiz">
+            <div class="question" id="question"></div>
+            <div class="options" id="options"></div>
+        </div>
+        <div id="score" style="display: none;"></div>
+        <button id="restart" style="display: none;" onclick="startQuiz()">Restart Quiz</button>
+    </div>
+
+    <script>
+        const videos = [
+            {
+                src: "drinking.mp4",
+                question: "What is the action?",
+                options: [
+                    { text: "Drinking", correct: true },
+                    { text: "Waving", correct: false },
+                    { text: "Pointing", correct: false },
+                    { text: "Jumping", correct: false },
+                ],
+            },
+            {
+                src: "evening.mp4",
+                question: "What is the action?",
+                options: [
+                    { text: "Eating", correct: false },
+                    { text: "Evening", correct: true },
+                    { text: "Sleeping", correct: false },
+                    { text: "Running", correct: false },
+                ],
+            },
+            {
+                src: "turn left.mp4",
+                question: "What is the action?",
+                options: [
+                    { text: "Laughing", correct: false },
+                    { text: "Sorry", correct: false },
+                    { text: "Turn left", correct: true },
+                    { text: "Shouting", correct: false },
+                ],
+            },
+            {
+              src: "water.mp4",
+              question: "What is the action?",
+              options: [
+                  { text: "Laughing", correct: false },
+                  { text: "Sorry", correct: false },
+                  { text: "Talking", correct: false },
+                  { text: "Water", correct: true },
+              ],
+          },
+          {
+            src: "sorry.mp4",
+            question: "What is the action?",
+            options: [
+                { text: "Laughing", correct: false },
+                { text: "Sorry", correct: true },
+                { text: "Talking", correct: false },
+                { text: "Shouting", correct: false },
+            ],
+        },
+        ];
+
+        let currentVideoIndex = 0;
+        let score = 0;
+
+        function startQuiz() {
+            currentVideoIndex = 0;
+            score = 0;
+            document.getElementById("score").style.display = "none";
+            document.getElementById("restart").style.display = "none";
+            document.getElementById("quiz").style.display = "block";
+            showVideo();
+        }
+
+        function showVideo() {
+            const videoPlayer = document.getElementById("videoPlayer");
+            const questionElement = document.getElementById("question");
+            const optionsElement = document.getElementById("options");
+
+            const currentVideo = videos[currentVideoIndex];
+            videoPlayer.src = currentVideo.src;
+
+            questionElement.textContent = currentVideo.question;
+            optionsElement.innerHTML = "";
+
+            currentVideo.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option.text;
+                button.onclick = () => checkAnswer(option.correct);
+                optionsElement.appendChild(button);
+            });
+        }
+
+        function checkAnswer(isCorrect) {
+            if (isCorrect) {
+                score++;
+            }
+            currentVideoIndex++;
+
+            if (currentVideoIndex < videos.length) {
+                showVideo();
+            } else {
+                showScore();
+            }
+        }
+
+        function showScore() {
+            document.getElementById("quiz").style.display = "none";
+            const scoreElement = document.getElementById("score");
+            scoreElement.textContent = `Your Score: ${score} / ${videos.length}`;
+            scoreElement.style.display = "block";
+            document.getElementById("restart").style.display = "inline-block";
+        }
+
+        // Start the quiz on page load
+        startQuiz();
+    </script>
+</body>
+</html>
